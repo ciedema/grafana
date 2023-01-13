@@ -1,0 +1,2532 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1000
+              },
+              {
+                "color": "orange",
+                "value": 1500
+              },
+              {
+                "color": "dark-red",
+                "value": 2000
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"hot_water_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"kitchen_mb_ac_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Kitchen/Mid Bed AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"little_house_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Little House"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"shed_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Shed"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"living_room_ac_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Living Room"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"mains_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Mains"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"master_bedroom_and_office_ac_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Mst Bed/Off AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"power_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Power Gen Use"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"stove_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Stove Power"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "from(bucket: \"home_assistant\")\r\n  |> range(start: -1m, stop: now())\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"W\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"mains_power\" or r[\"entity_id\"] == \"hot_water_power\" )\r\n  |> last()\r\n  |> pivot(rowKey: [\"domain\"], columnKey: [\"entity_id\"], valueColumn: \"_value\")\r\n  |> map (fn: (r) => ({\"value\": r.hot_water_power+r.mains_power}))\r\n  ",
+          "refId": "A"
+        }
+      ],
+      "title": "Current Power Use",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 2000,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1000
+              },
+              {
+                "color": "dark-red",
+                "value": 1500
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Power"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Energy"
+              },
+              {
+                "id": "unit",
+                "value": "kwatth"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "id": 21,
+      "interval": "5m",
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "import \"timezone\"\r\noption location = timezone.location(name: \"Australia/Brisbane\")\r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop )\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"W\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_power\" or r[\"entity_id\"] == \"mains_power\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean)\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"entity_id\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({_time:r._time, _value: r.hot_water_power + r.mains_power}))",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "NekHgMp4k"
+          },
+          "hide": false,
+          "query": "import \"timezone\"\r\noption location = timezone.location(name: \"Australia/Brisbane\")\r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"mains_energy\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last)\r\n  |> difference()\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"entity_id\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({time:r._time, total: r.hot_water_energy+r.mains_energy}))\r\n",
+          "refId": "B"
+        }
+      ],
+      "title": "Average Use",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "yellow",
+                "value": null
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hot_water_energy"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mains_energy"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "General Use"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 8,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "first= \r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"mains_energy\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> first()\r\n  |> map(fn: (r) => ({ r with type: \"first\" }))\r\n\r\nlast= \r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"mains_energy\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> last()\r\n  |> map(fn: (r) => ({ r with type: \"last\" }))\r\n\r\nunion(tables: [first, last])\r\n  |>pivot(rowKey: [\"entity_id\"], columnKey: [\"type\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({ entity_id: r.entity_id, _time:r._stop, _value: r.last-r.first }))\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Power Use",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "-4mPzcpVk"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "General Power"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 11,
+        "y": 0
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "range"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "-4mPzcpVk"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT stat.start, stat.sum, meta.statistic_id\r\n\r\nFROM homeassistant.statistics stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.hot_water_energy_cost'\r\nand stat.start >= Date_add($__timeFrom(), INTERVAL -10 HOUR)  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR)\r\n\r\nunion \r\nSELECT stat.start, stat.sum, meta.statistic_id\r\n\r\nFROM homeassistant.statistics_short_term stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.hot_water_energy_cost'\r\nand stat.start > (SELECT max(stat.start)\r\n\r\nFROM homeassistant.statistics stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.hot_water_energy_cost'\r\nand stat.start >= Date_add($__timeFrom(), INTERVAL -10 HOUR)  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR))  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR)\r\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "-4mPzcpVk"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT stat.start, stat.sum, meta.statistic_id\r\n\r\nFROM homeassistant.statistics stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.mains_energy_cost'\r\nand stat.start >= Date_add($__timeFrom(), INTERVAL -10 HOUR)  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR)\r\n\r\nunion \r\nSELECT stat.start, stat.sum, meta.statistic_id\r\n\r\nFROM homeassistant.statistics_short_term stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.mains_energy_cost'\r\nand stat.start > (SELECT max(stat.start)\r\n\r\nFROM homeassistant.statistics stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.mains_energy_cost'\r\nand stat.start >= Date_add($__timeFrom(), INTERVAL -10 HOUR)  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR))  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR)\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Cost",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 2000,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1000
+              },
+              {
+                "color": "dark-red",
+                "value": 1500
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "kwatth"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 25
+                    },
+                    {
+                      "color": "orange",
+                      "value": 30
+                    },
+                    {
+                      "color": "red",
+                      "value": 35
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "max",
+                "value": 45
+              },
+              {
+                "id": "displayName",
+                "value": "Energy"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Power"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 14,
+        "y": 0
+      },
+      "id": 26,
+      "interval": "1d",
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "import \"timezone\"\r\noption location = timezone.location(name: \"Australia/Brisbane\")\r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop )\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"W\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_power\" or r[\"entity_id\"] == \"mains_power\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean)\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"entity_id\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({_time:r._time, _value: r.hot_water_power + r.mains_power}))",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "NekHgMp4k"
+          },
+          "hide": false,
+          "query": "import \"timezone\"\r\noption location = timezone.location(name: \"Australia/Brisbane\")\r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"mains_energy\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> aggregateWindow(every: 1d, fn: last)\r\n  |> difference()\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"entity_id\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({time:r._time, total: r.hot_water_energy+r.mains_energy}))\r\n",
+          "refId": "B"
+        }
+      ],
+      "timeFrom": "now/M",
+      "title": "Average Use",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "yellow",
+                "value": null
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hot_water_energy"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mains_energy"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "General Use"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 18,
+        "y": 0
+      },
+      "id": 31,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "first= \r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"mains_energy\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> first()\r\n  |> map(fn: (r) => ({ r with type: \"first\" }))\r\n\r\nlast= \r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"mains_energy\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> last()\r\n  |> map(fn: (r) => ({ r with type: \"last\" }))\r\n\r\nunion(tables: [first, last])\r\n  |>pivot(rowKey: [\"entity_id\"], columnKey: [\"type\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({ entity_id: r.entity_id, _time:r._stop, _value: r.last-r.first }))\r\n",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "now/M",
+      "title": "Power Use",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "-4mPzcpVk"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "General Power"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 21,
+        "y": 0
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "range"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "-4mPzcpVk"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT stat.start, stat.sum, meta.statistic_id\r\n\r\nFROM homeassistant.statistics stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.hot_water_energy_cost'\r\nand stat.start >= Date_add($__timeFrom(), INTERVAL -10 HOUR)  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR)\r\n\r\nunion \r\nSELECT stat.start, stat.sum, meta.statistic_id\r\n\r\nFROM homeassistant.statistics_short_term stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.hot_water_energy_cost'\r\nand stat.start > (SELECT max(stat.start)\r\n\r\nFROM homeassistant.statistics stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.hot_water_energy_cost'\r\nand stat.start >= Date_add($__timeFrom(), INTERVAL -10 HOUR)  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR))  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR)\r\n",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "-4mPzcpVk"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT stat.start, stat.sum, meta.statistic_id\r\n\r\nFROM homeassistant.statistics stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.mains_energy_cost'\r\nand stat.start >= Date_add($__timeFrom(), INTERVAL -10 HOUR)  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR)\r\n\r\nunion \r\nSELECT stat.start, stat.sum, meta.statistic_id\r\n\r\nFROM homeassistant.statistics_short_term stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.mains_energy_cost'\r\nand stat.start > (SELECT max(stat.start)\r\n\r\nFROM homeassistant.statistics stat\r\njoin homeassistant.statistics_meta meta on meta.id=stat.metadata_id\r\nwhere meta.statistic_id='sensor.mains_energy_cost'\r\nand stat.start >= Date_add($__timeFrom(), INTERVAL -10 HOUR)  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR))  and stat.start <= Date_add($__timeTo(),INTERVAL -10 HOUR)\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "timeFrom": "now/M",
+      "title": "Cost",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "links": [
+            {
+              "title": "",
+              "url": "https://grafana2.storiesfromtheseat.com/d/UXRKPgp4z/circuit-detail?orgId=1&var-circuit=${__field.labels.entity_id}"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 250
+              },
+              {
+                "color": "orange",
+                "value": 500
+              },
+              {
+                "color": "dark-red",
+                "value": 1000
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"hot_water_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"kitchen_mb_ac_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Kit/Mid Bed AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"little_house_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Little House"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"shed_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Shed"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"living_room_ac_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Living Room AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"mains_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Mains"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"master_bedroom_and_office_ac_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Mst Bed/Off AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"power_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Power Gen Use"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"stove_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Stove Power"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 0,
+        "y": 6
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "from(bucket: \"home_assistant\")\r\n  |> range(start: -10m, stop: now())\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"W\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_power\" or r[\"entity_id\"] == \"kitchen_mb_ac_power\" or r[\"entity_id\"] == \"little_house_power\" or r[\"entity_id\"] == \"living_room_ac_power\" or r[\"entity_id\"] == \"master_bedroom_and_office_ac_power\" or r[\"entity_id\"] == \"power_power\" or r[\"entity_id\"] == \"shed_power\" or r[\"entity_id\"] == \"stove_power\")\r\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "title": "Current Power Use by Circuit",
+      "type": "stat"
+    },
+    {
+      "datasource": {},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "links": [
+            {
+              "title": "Details",
+              "url": "https://grafana2.storiesfromtheseat.com/d/UXRKPgp4z/circuit-detail?orgId=1&var-circuit=${__field.labels.entity_id}"
+            }
+          ],
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"hot_water_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"kitchen_mb_ac_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Kitchen and Mid Bed AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"little_house_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Little House"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"living_room_ac_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Living Room"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"master_bedroom_and_office_ac_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Master Bed and Office AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"power_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Power General Use"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"stove_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Stove"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"shed_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Shed"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 6,
+        "y": 6
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "from(bucket: \"home_assistant\")\r\n  |> range(start: -7d, stop:now())\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"kitchen_mb_ac_energy\" or r[\"entity_id\"] == \"little_house_energy\" or r[\"entity_id\"] == \"living_room_ac_energy\" or r[\"entity_id\"] == \"master_bedroom_and_office_ac_energy\" or r[\"entity_id\"] == \"power_energy\" or r[\"entity_id\"] == \"shed_energy\" or r[\"entity_id\"] == \"stove_energy\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> aggregateWindow(every: 7d, fn: max, createEmpty: false)\r\n  |> difference()\r\n",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "7d",
+      "title": "Power Use last 7 days",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "links": [
+            {
+              "title": "Details",
+              "url": "https://grafana2.storiesfromtheseat.com/d/UXRKPgp4z/circuit-detail?orgId=1&var-circuit=${__field.labels.entity_id}"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"hot_water_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"kitchen_mb_ac_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Kitchen and Middle Bed AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"little_house_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Little House"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"living_room_ac_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Living Room AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"master_bedroom_and_office_ac_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Master Bed and Office AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"power_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Power General Use"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"shed_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Shed"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"stove_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Stove"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 6
+      },
+      "id": 10,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "NekHgMp4k"
+          },
+          "query": "from(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"kitchen_mb_ac_energy\" or r[\"entity_id\"] == \"little_house_energy\" or r[\"entity_id\"] == \"living_room_ac_energy\" or r[\"entity_id\"] == \"master_bedroom_and_office_ac_energy\" or r[\"entity_id\"] == \"power_energy\" or r[\"entity_id\"] == \"shed_energy\" or r[\"entity_id\"] == \"stove_energy\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last)\r\n  |> increase()\r\n  |> yield(name: \"increase\")\r\n\r\n",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "now/M",
+      "title": "Month Power Usage by Circuit",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "links": [
+            {
+              "title": "",
+              "url": "https://grafana.storiesfromtheseat.com/d/UXRKPgp4z/circuit-detail?orgId=1&var-circuit=${__field.labels.entity_id}&from=${__from}&to=${__to}"
+            }
+          ],
+          "mappings": [
+            {
+              "options": {
+                "mains_power": {
+                  "index": 0,
+                  "text": "Total"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 250
+              },
+              {
+                "color": "orange",
+                "value": 500
+              },
+              {
+                "color": "dark-red",
+                "value": 1000
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"hot_water_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"kitchen_mb_ac_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Kit/Mid Bed AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"little_house_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Little House"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"shed_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Shed"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"living_room_ac_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Living Room AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"mains_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Total(Mains)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"master_bedroom_and_office_ac_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Mst Bed/Off AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"power_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Power Gen Use"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"stove_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Stove Power"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "id": 23,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "from(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"W\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_power\" or r[\"entity_id\"] == \"kitchen_mb_ac_power\" or r[\"entity_id\"] == \"little_house_power\" or r[\"entity_id\"] == \"living_room_ac_power\" or r[\"entity_id\"] == \"master_bedroom_and_office_ac_power\" or r[\"entity_id\"] == \"power_power\" or r[\"entity_id\"] == \"shed_power\" or r[\"entity_id\"] == \"stove_power\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean)\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Power Use by Circuit",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 76,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"hot_water_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"kitchen_mb_ac_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Kitchen and Middle Bed AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"little_house_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Little House"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"living_room_ac_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Living Room AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"master_bedroom_and_office_ac_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Master Bed and Office AC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"power_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Power Gen Use"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"shed_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Shed"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"stove_energy\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Stove"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      },
+      "id": 15,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.85,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "normal",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "Time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "from(bucket: \"home_assistant\")\r\n  |> range(start: -1d, stop:now())\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"kitchen_mb_ac_energy\" or r[\"entity_id\"] == \"little_house_energy\" or r[\"entity_id\"] == \"living_room_ac_energy\" or r[\"entity_id\"] == \"master_bedroom_and_office_ac_energy\" or r[\"entity_id\"] == \"power_energy\" or r[\"entity_id\"] == \"shed_energy\" or r[\"entity_id\"] == \"stove_energy\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> aggregateWindow(every: 1h, fn: max, createEmpty: false)\r\n  |> difference()\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Hourly By Circuit",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "id": 17,
+      "links": [
+        {
+          "title": "Last 30 days.",
+          "url": "https://grafana2.storiesfromtheseat.com/d/7GVzh_5Vk/total-consumption-details?orgId=1&from=now-30d&to=now"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "import \"timezone\"\r\noption location = timezone.location(name: \"Australia/Brisbane\")\r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop )\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"W\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_power\" or r[\"entity_id\"] == \"mains_power\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> aggregateWindow(every: 5m, fn: mean)\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"entity_id\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({_time:r._time, _value: r.hot_water_power + r.mains_power}))",
+          "refId": "A"
+        }
+      ],
+      "title": "5 min Power Use",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "hot_water_energy"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hot Water"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mains_energy"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Mains"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Total"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 12,
+        "y": 21
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "NekHgMp4k"
+          },
+          "query": "import \"timezone\"\r\noption location = timezone.location(name: \"Australia/Brisbane\")\r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"mains_energy\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> aggregateWindow(every: 10m, fn: last)\r\n  |> increase()\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"entity_id\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({r with total: r.hot_water_energy+r.mains_energy}))\r\n",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "now/d",
+      "title": "Power Use Today",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 250
+              },
+              {
+                "color": "orange",
+                "value": 500
+              },
+              {
+                "color": "dark-red",
+                "value": 1000
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"20925_smart_electricity_monitoring_plug_3_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Dishwasher"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"comms_plug_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Comms Plug"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"office_computer_plug_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Office Computer Plug"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"upstairs_fridge_plug_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Upstairs Fridge"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"media_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Media Power"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"kitchen_power_board_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Kitchen Power Board"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"kitchen_toaster_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Kitchen Toaster"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"dryer_sp_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Dryer"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "value {domain=\"sensor\", entity_id=\"washer_sp_power\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Washer"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 19,
+        "y": 21
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "from(bucket: \"home_assistant\")\r\n  |> range(start: -6h, stop: now())\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"W\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> filter(fn: (r) => r[\"entity_id\"]==\"media_power\" or r[\"entity_id\"] == \"comms_plug_power\" or r[\"entity_id\"] == \"20925_smart_electricity_monitoring_plug_3_power\" \r\n                    or r[\"entity_id\"] == \"office_computer_plug_power\" or r[\"entity_id\"] == \"upstairs_fridge_plug_power\" \r\n                    or r[\"entity_id\"] == \"kitchen_toaster_power\" or r[\"entity_id\"] == \"kitchen_power_board_power\"\r\n                    or r[\"entity_id\"] == \"dryer_sp_power\" or r[\"entity_id\"] == \"washer_sp_power\"\r\n          )\r\n  |> last()",
+          "refId": "A"
+        }
+      ],
+      "title": "Device Power",
+      "type": "stat"
+    },
+    {
+      "datasource": {},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "#EAB839",
+                "value": 25
+              },
+              {
+                "color": "red",
+                "value": 35
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Total"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 27
+      },
+      "hideTimeOverride": false,
+      "id": 11,
+      "links": [
+        {
+          "title": "Total Consumption",
+          "url": "/d/7GVzh_5Vk/total-consumption-details?orgId=1"
+        }
+      ],
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.73,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "9.1.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4TU1pnVk"
+          },
+          "query": "import \"timezone\"\r\noption location = timezone.location(name: \"Australia/Brisbane\")\r\nfrom(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\")\r\n  |> filter(fn: (r) => r[\"entity_id\"] == \"hot_water_energy\" or r[\"entity_id\"] == \"mains_energy\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\r\n  |> aggregateWindow(every: 1d, fn: last)\r\n  |> difference()\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"entity_id\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({time:r._time, total: r.hot_water_energy+r.mains_energy}))\r\n",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "7d",
+      "title": "Power Use Last 7 Days",
+      "transformations": [],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "NekHgMp4k"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Whole of Day Use"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Dusk to Dawn Use"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Evening Use"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Daytime Use"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Overnight Use"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 27
+      },
+      "id": 34,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "NekHgMp4k"
+          },
+          "query": "\r\ndawnToDuskLast = from(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\" and r[\"_field\"] == \"value\" and r[\"entity_id\"] == \"mains_energy\")\r\n  |> timeShift(duration: 17h)\r\n  |> hourSelection(start: 0, stop: 12)\r\n  |> aggregateWindow(every: 1d, fn: last, createEmpty: false)\r\n  |> map (fn: (r) => ( {r with type: \"dawnToDuskLast\"}))\r\n\r\ndawnToDuskFirst= from(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\" and r[\"_field\"] == \"value\" and r[\"entity_id\"] == \"mains_energy\")\r\n  |> timeShift(duration: 17h)\r\n  |> hourSelection(start: 0, stop: 12)\r\n  |> aggregateWindow(every: 1d, fn: first, createEmpty: false)\r\n  |> map (fn: (r) => ( {r with type: \"dawnToDuskFirst\"}))\r\n\r\neveningLast = from(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\" and r[\"_field\"] == \"value\" and r[\"entity_id\"] == \"mains_energy\")\r\n  |> timeShift(duration: 17h)\r\n  |> hourSelection(start: 0, stop: 5)\r\n  |> aggregateWindow(every: 1d, fn: last, createEmpty: false)\r\n  |> map (fn: (r) => ( {r with type: \"eveningLast\"}))\r\n\r\neveningFirst = from(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\" and r[\"_field\"] == \"value\" and r[\"entity_id\"] == \"mains_energy\")\r\n  |> timeShift(duration: 17h)\r\n  |> hourSelection(start: 0, stop: 5)\r\n  |> aggregateWindow(every: 1d, fn: first, createEmpty: false)\r\n  |> map (fn: (r) => ( {r with type: \"eveningFirst\"}))\r\n\r\n\r\ndayLast = from(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\" and r[\"_field\"] == \"value\" and r[\"entity_id\"] == \"mains_energy\")\r\n  |> timeShift(duration: 17h)\r\n  |> aggregateWindow(every: 1d, fn: last, createEmpty: false)\r\n  |> map (fn: (r) => ( {r with type: \"dayLast\"}))\r\n\r\ndayFirst= from(bucket: \"home_assistant\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"kWh\" and r[\"_field\"] == \"value\" and r[\"entity_id\"] == \"mains_energy\")\r\n  |> timeShift(duration: 17h)\r\n  |> aggregateWindow(every: 1d, fn: first, createEmpty: false)\r\n  |> map (fn: (r) => ( {r with type: \"dayFirst\"}))\r\n\r\nunion (tables:[dawnToDuskFirst,dawnToDuskLast,eveningFirst,eveningLast,dayFirst,dayLast])\r\n  |> sort(columns: [\"_time\",\"type\"])\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"type\"], valueColumn: \"_value\")\r\n  |> map (fn: (r) => ({_time: r._time, \r\n        \"Dusk to Dawn Use\": r.dawnToDuskLast-r.dawnToDuskFirst, \r\n        \"Evening Use\":r.eveningLast-r.eveningFirst, \r\n        \"Whole of Day Use\": r.dayLast-r.dayFirst, \r\n        \"Daytime Use\": (r.dayLast-r.dayFirst)-(r.dawnToDuskLast-r.dawnToDuskFirst), \r\n        \"Overnight Use\": (r.dawnToDuskLast-r.dawnToDuskFirst)-(r.eveningLast-r.eveningFirst) }))",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "1M",
+      "title": "By Day",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now/d",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "Power Usage",
+  "uid": "WbnOdm5Vz",
+  "version": 95,
+  "weekStart": ""
+}
